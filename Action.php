@@ -41,7 +41,8 @@ class AISummary_Action extends Typecho_Widget implements Widget_Interface_Do
 
         /** 提示信息 */
         $this->widget('Widget_Notice')->set(_t('已生成AI摘要'), NULL, 'success');
-        $this->response->redirect(Typecho_Common::url('extending.php?panel=AISummary%2Fmanage-summaries.php', $this->options->adminUrl));
+        $this->response->goBack();
+        // $this->response->redirect(Typecho_Common::url('extending.php?panel=AISummary%2Fmanage-summaries.php', $this->options->adminUrl));
     }
 
     public function action()

@@ -19,6 +19,7 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
 
         Helper::addPanel(3, 'AISummary/manage-summaries.php', '摘要', '管理AI摘要', 'administrator');
         Helper::addAction('summary-edit', 'AISummary_Action');
+        Typecho_Plugin::factory('Widget_Archive')->header = array('AISummary_Plugin', 'header');
         Typecho_Plugin::factory('Widget_Abstract_Contents')->excerptEx = array('AISummary_Plugin', 'customExcerpt');
         Typecho_Plugin::factory('Widget_Abstract_Contents')->contentEx = array('AISummary_Plugin', 'customContent');
         Typecho_Plugin::factory('Widget_Contents_Post_Edit')->finishPublish = array('AISummary_Plugin', 'onFinishPublish');
@@ -104,17 +105,27 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
             array('0' => '不显示', '1' => '使用默认引用样式', '2' => '使用自定义样式'),
             '1',
             '正文摘要显示样式',
-            '选择在正文开头以何种样式显示摘要，自定义样式待后续支持'
+            '选择在正文开头以何种样式显示摘要，使用主题内的引言样式或进行自定义样式设置'
         );
         $form->addInput($summaryStyle);
+
+        // 添加输入框，自定义样式
+        $css = new Typecho_Widget_Helper_Form_Element_Textarea(
+            'css',
+            NULL,
+            "<style>\n.aisummary{\n}\n</style>",
+            _t('自定义样式'),
+            _t('在这里输入额外的自定义样式，加载到head标签中控制AI摘要的表现样式<br />摘要 class="aisummary"，需包含style标签<br />如无定制需求此项可留空')
+        );
+        $form->addInput($css);
 
         // 添加输入框：摘要前缀
         $prefix = new Typecho_Widget_Helper_Form_Element_Text(
             'prefix',
             NULL,
-            'AI摘要：',
-            _t('正文摘要前缀'),
-            _t('请输入在正文中出现的摘要展示前缀，仅在正文摘要显示时生效')
+            "<strong>AI摘要：</strong>{{text}}<br /><br />Powered by <a href='https://idealclover.top/archives/636/'>AISummary</a>.",
+            _t('正文摘要前后固定文字'),
+            _t('请输入在正文中出现的摘要展示前后固定文字，正文用{{text}}代替，仅在正文摘要显示时生效')
         );
         $form->addInput($prefix);
 
@@ -163,11 +174,12 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
         $summaryField = $options->field;
         $customSummary = $widget->fields->$summaryField;
         if (empty($customSummary)) return $content;
+        $pureSummary = str_replace("{{text}}", $customSummary, $options->prefix);
         if ($options->summaryStyle === '1') {
-            $summaryString = "<blockquote>" . $options->prefix . $customSummary . "</blockquote>";
+            $summaryString = '<blockquote class="aisummary">' . $pureSummary . "</blockquote>";
             $content = $summaryString . $content;
         } else if ($options->summaryStyle === '2') {
-            $summaryString = '<div class="summary">' . $customSummary . "</div>";
+            $summaryString = '<div class="aisummary">' . $pureSummary . "</div>";
             $content = $summaryString . $content;
         }
 
@@ -280,5 +292,16 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
         }
 
         return "";
+    }
+
+    /**
+     * 相关css加载在头部
+     */
+    public static function header()
+    {
+        $css = Typecho_Widget::widget('Widget_Options')->plugin('AISummary')->css;
+        // echo ('<style></style>');
+        if (!empty($css))
+            echo $css;
     }
 }
