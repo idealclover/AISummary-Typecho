@@ -26,7 +26,7 @@
 
 ## 安装方式
 
-1. Clone 这个仓库或[下载 zip]()到 {typecho 目录}/usr/plugins
+1. Clone 这个仓库或[下载 zip](https://github.com/idealclover/AISummary-Typecho/releases/download/v1.0.0/AISummary.zip)到 {typecho 目录}/usr/plugins
 2. 重命名为 AISummary（区分大小写）
 3. 在管理平台中启用插件
 4. 点击设置配置 API 地址与 API KEY 等信息
