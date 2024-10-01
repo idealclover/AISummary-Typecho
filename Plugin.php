@@ -5,7 +5,7 @@
  *
  * @package AISummary
  * @author idealclover
- * @version 1.0.0
+ * @version 1.1.0
  * @link https://idealclover.top
  */
 class AISummary_Plugin implements Typecho_Plugin_Interface
@@ -138,11 +138,18 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
             _t('存储在数据库中的摘要字段名称，默认为"summary"')
         );
         $form->addInput($field);
+
+        $token = new Typecho_Widget_Helper_Form_Element_Text(
+            'token',
+            NULL,
+            self::create_uuid(),
+            _t('请求令牌'),
+            _t('用于验证请求合法性')
+        );
+        $form->addInput($token);
     }
 
-    public static function personalConfig(Typecho_Widget_Helper_Form $form)
-    {
-    }
+    public static function personalConfig(Typecho_Widget_Helper_Form $form) {}
 
     public static function customExcerpt($excerpt, $widget)
     {
@@ -303,5 +310,20 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
         // echo ('<style></style>');
         if (!empty($css))
             echo $css;
+    }
+
+    public static function create_uuid()
+    {
+        return sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
+        );
     }
 }

@@ -50,11 +50,19 @@ class AISummary_Action extends Typecho_Widget implements Widget_Interface_Do
         $this->db = Typecho_Db::get();
         $this->prefix = $this->db->getPrefix();
         $this->options = Typecho_Widget::widget('Widget_Options');
+
+        // 获取请求中的 token
+        $requestToken = $this->request->get('token');
+
+        // 获取 Typecho 后台中设置的 token
+        $settingToken = Typecho_Widget::widget('Widget_Options')->plugin('AISummary')->token;
+
+        // 验证 token 是否匹配
+        if ($requestToken !== $settingToken) {
+            throw new Typecho_Widget_Exception('Invalid token', 403);
+        }
+
         $this->on($this->request->is('do=generate'))->generateSummary();
-        // $this->on($this->request->is('do=addhanny'))->addHannysBlog();
-        // $this->on($this->request->is('do=update'))->updateLink();
-        // $this->on($this->request->is('do=delete'))->deleteLink();
-        // $this->on($this->request->is('do=sort'))->sortLink();
         $this->response->redirect($this->options->adminUrl);
     }
 }
