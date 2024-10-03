@@ -10,6 +10,8 @@ include 'menu.php';
 $stat = Typecho_Widget::widget('Widget_Stat');
 $posts = Typecho_Widget::widget('Widget_Contents_Post_Admin', 'pageSize=10');
 $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_Cookie::get('__typecho_all_posts'));
+$token = Typecho_Widget::widget('Widget_Options')->plugin('AISummary')->token;
+$url = '/action/summary-edit?do=generate&token=' . $token;
 ?>
 <div class="main">
     <div class="body container">
@@ -24,7 +26,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                                 <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="<?php $options->index('/action/summary-edit?do=generate'); ?>"><?php _e(_t('生成摘要')); ?></a>
+                                        <a href="<?php $options->index($url); ?>"><?php _e(_t('生成摘要')); ?></a>
                                     </li>
                                 </ul>
                             </div>
@@ -117,7 +119,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                                             }
                                             if (!$flag) echo '<td></td><td></td>';
                                             ?>
-                                            <td><a href="<?php $options->index('/action/summary-edit?do=generate&cid=' . $posts->cid); ?>"><?php _e(_t('生成')); ?></a></td>
+                                            <td><a href="<?php $options->index($url . '&cid=' . $posts->cid); ?>"><?php _e(_t('生成')); ?></a></td>
                                         </tr>
                                     <?php endwhile; ?>
                                 <?php else : ?>
@@ -140,7 +142,7 @@ $isAllPosts = ('on' == $request->get('__typecho_all_posts') || 'on' == Typecho_C
                                 <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only"><?php _e('操作'); ?></i><?php _e('选中项'); ?> <i class="i-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="<?php $options->index('/action/summary-edit?do=generate'); ?>"><?php _e(_t('生成摘要')); ?></a>
+                                        <a href="<?php $options->index($url); ?>"><?php _e(_t('生成摘要')); ?></a>
                                     </li>
                                 </ul>
                             </div>
