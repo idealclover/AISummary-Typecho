@@ -164,5 +164,5 @@ $url = '/action/summary-edit?do=generate&token=' . $token;
 // include 'copyright.php';
 include 'common-js.php';
 include 'table-js.php';
-// include 'footer.php';
+include 'footer.php';
 ?>
