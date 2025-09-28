@@ -5,7 +5,7 @@
  *
  * @package AISummary
  * @author idealclover
- * @version 1.1.0
+ * @version 1.1.1
  * @link https://idealclover.top
  */
 class AISummary_Plugin implements Typecho_Plugin_Interface
