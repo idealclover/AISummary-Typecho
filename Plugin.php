@@ -5,7 +5,7 @@
  *
  * @package AISummary
  * @author idealclover
- * @version 1.1.0
+ * @version 1.1.1
  * @link https://idealclover.top
  */
 class AISummary_Plugin implements Typecho_Plugin_Interface
@@ -236,7 +236,15 @@ class AISummary_Plugin implements Typecho_Plugin_Interface
         $options = Typecho_Widget::widget('Widget_Options')->plugin('AISummary');
         $modelName = $options->modelName;
         $keyValue = $options->keyValue;
-        $apiUrl = rtrim($options->apiUrl, '/') . '/v1/chat/completions';
+        // 智能处理不同格式的API地址
+        $userApiUrl = rtrim($options->apiUrl, '/');
+        if (strpos($userApiUrl, '/chat/completions') !== false) {
+            // 如果用户输入的URL已经包含完整的API路径，直接使用
+            $apiUrl = $userApiUrl;
+        } else {
+            // 否则按照OpenAI标准格式拼接
+            $apiUrl = $userApiUrl . '/v1/chat/completions';
+        }
         $prompt = $options->prompt;
         $maxLength = $options->maxLength;
 
